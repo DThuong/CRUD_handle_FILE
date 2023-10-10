@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= title %></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      td,
+      tr,
+      h2 {
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .btn-add {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-3">
+      <h2>Danh sách sản phẩm</h2>
+      <a href="/add"
+        ><button type="button" class="btn btn-outline-dark btn-add">
+          Thêm sản phẩm
+        </button></a
+      >
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.forEach(p => { %>
+          <tr id="<%= p.id %>">
+            <td><%= p.id %></td>
+            <td>
+              <img
+                src="<%= p.image %>"
+                alt="image"
+                style="width: 80px; height: 80px; border-radius: 15px"
+              />
+            </td>
+            <td>
+              <a
+                style="text-decoration: none; color: red"
+                href="/details/<%= p.id %>"
+                ><%= p.name %></a
+              >
+            </td>
+            <td><%= p.price %></td>
+            <td>
+              <a href="/edit/<%= p.id %>"
+                ><button type="button" class="btn btn-outline-secondary">
+                  Chỉnh sửa
+                </button></a
+              >
+
+              <a href="/delete/<%= p.id %>"
+                ><button
+                  class="btn btn-outline-danger btn-delete"
+                  id="btn-delete"
+                  data-id="<%= p.id %>"
+                  data-name="<%= p.name %>"
+                >
+                  Xóa
+                </button></a
+              >
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- The Modal -->
+    <div
+      class="modal fade"
+      id="myModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">
+              Xóa sản phẩm: <span id="name-to-delete"></span>
+            </h4>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            Bạn có chắc muốn xóa sản phẩm: <span id="id-delete"></span>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">
+              Hủy
+            </button>
+            <button
+              type="button"
+              data-id=""
+              class="btn btn-danger btn-confirm-delete"
+              id="btn-confirm-delete"
+            >
+              Xóa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Add a click event listener to all delete buttons
+      $(".btn-delete").click((e)=> {
+        e.preventDefault();
+
+        const id = $(e.target).data("id");
+        const name = $(e.target).data("name");
+
+        $('#myModal').modal('show');
+        $('#name-to-delete').html(id)
+        $('#id-delete').html(name)
+        $('#btn-confirm-delete').attr('data-id', id)
+      });
+
+      $('#btn-confirm-delete').click(e => {
+        const id = e.target.dataset.id;
+        $('#myModal').modal('hide');
+
+        deleteProducts(id)
+      })
+
+      function deleteProducts(id) {
+  fetch(`http://localhost:3000/delete/${id}`, {
+    method: "POST",
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: "id=" + id
+  })
+    .then((res) => res.json())
+    .then((json) => {
+      if (json.code === 0) {
+        document.getElementById(id).remove();
+      } else {
+        console.log(json.message);
+      }
+    })
+    .catch((err) => console.log(err));
+}
+    </script>
+  </body>
+</html>

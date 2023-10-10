@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css    "
+    />
+  </head>
+  <body>
+    <div>
+      <div class="modal-dialog">
+        <form action="/edit/<%= p.id %>" method="post" enctype="application/x-www-form-urlencoded">
+          <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title text-warning">
+                Cập nhật thông tin sản phẩm có id: <%= p.id %>
+              </h4>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+              <div class="modal-body">
+                <input type="text" name="id" hidden />
+                <div class="form-group">
+                  <label for="name">Tên sản phẩm</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Nhập tên sản phẩm"
+                    id="name"
+                    name="name"
+                    value="<%= p.name %>"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="price">Giá sản phẩm</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Nhập giá sản phẩm"
+                    id="price"
+                    name="price"
+                    value="<%= p.price %>"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="desc">Mô tả sản phẩm</label>
+                  <textarea class="form-control" rows="5" id="desc" name="desc">
+<%= p.desc %></textarea
+                  >
+                </div>
+                <% if (error) { %>
+                <div class="alert alert-danger"><%= error %></div>
+                <% } %>
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <a href="/" class="btn btn-primary">Quay lại</a>
+                <button type="submit" class="btn btn-warning">Cập nhật</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
